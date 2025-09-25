@@ -180,7 +180,3 @@ curl "$(task url)/agencies?sort=size_asc"
 - `api_base_url` - The base URL for the API Gateway
 - `s3_bucket` - S3 bucket name for data storage
 - `s3_data_url` - S3 location of the current data snapshot
-
-## License
-
-MIT

@@ -109,3 +109,21 @@ tasks:
         aws lambda get-function --function-name "$FUNCTION_NAME" --query 'Configuration.Environment.Variables'
         echo "=== Function Configuration ==="
         aws lambda get-function --function-name "$FUNCTION_NAME" --query 'Configuration.{MemorySize:MemorySize,Timeout:Timeout,Runtime:Runtime,LastModified:LastModified}'
+
+  zip:
+    desc: Create ecfr.zip archive of project code and configs only
+    cmds:
+      - 'rm -f ecfr.zip'
+      - |
+        zip -r ecfr.zip . \
+          -x ".*" \
+          -x "*/.*" \
+          -x "*/.*/\*" \
+          -x "*__pycache__*" \
+          -x "*.pyc" \
+          -x "infra/build/*" \
+          -x "infra/terraform.tfstate*" \
+          -x "response.json" \
+          -x "*.log" \
+          -x "*.zip"
+      - 'echo "Created ecfr.zip"'
