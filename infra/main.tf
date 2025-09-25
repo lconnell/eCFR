@@ -97,8 +97,8 @@ data "archive_file" "src_zip" {
 resource "aws_s3_object" "layer_zip" {
   bucket = aws_s3_bucket.data.id
   key    = "layers/requests/layer.zip"
-  source = "${path.module}/../layer.zip"
-  etag   = filemd5("${path.module}/../layer.zip")
+  source = "${path.module}/build/layer.zip"
+  etag   = filemd5("${path.module}/build/layer.zip")
 }
 
 resource "aws_lambda_layer_version" "requests" {
@@ -117,6 +117,7 @@ resource "aws_lambda_function" "ingestor" {
   runtime       = local.lambda_runtime
   filename      = data.archive_file.src_zip.output_path
   timeout       = 900
+  memory_size   = 512
   layers        = [aws_lambda_layer_version.requests.arn]
 
   environment {
@@ -125,7 +126,6 @@ resource "aws_lambda_function" "ingestor" {
       DATA_KEY                    = local.s3_key
       ARCHIVE_PREFIX              = "ecfr/archives/"
       DATA_TTL_HOURS              = "26"
-      ECFR_MAX_TITLES             = tostring(var.ecfr_max_titles)
       ECFR_BASE_URL               = var.ecfr_base_url
       ECFR_TITLE_JSON_PATH_TMPL   = var.ecfr_title_json_path_tmpl
       HTTP_USER_AGENT             = var.http_user_agent
@@ -168,7 +168,6 @@ resource "aws_lambda_function" "api" {
       DATA_BUCKET                 = aws_s3_bucket.data.bucket
       DATA_KEY                    = local.s3_key
       DATA_TTL_HOURS              = "26"
-      ECFR_MAX_TITLES             = tostring(var.ecfr_max_titles)
       ECFR_BASE_URL               = var.ecfr_base_url
       ECFR_TITLE_JSON_PATH_TMPL   = var.ecfr_title_json_path_tmpl
       HTTP_USER_AGENT             = var.http_user_agent
@@ -208,12 +207,4 @@ resource "aws_apigatewayv2_stage" "prod" {
   api_id      = aws_apigatewayv2_api.http.id
   name        = "$default"
   auto_deploy = true
-}
-
-output "api_base_url" {
-  value = aws_apigatewayv2_api.http.api_endpoint
-}
-
-output "s3_data_url" {
-  value = "s3://${local.bucket_name}/${local.s3_key}"
 }

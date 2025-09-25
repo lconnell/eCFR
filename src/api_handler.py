@@ -1,14 +1,10 @@
 import json
 import os
-from datetime import datetime, timedelta, timezone
 
 import boto3
 
-from ecfr_client import ECFRClient
-
 S3_BUCKET = os.getenv("DATA_BUCKET")
 CURR_KEY = os.getenv("DATA_KEY", "ecfr/agency_sizes.json")
-MAX_AGE_HOURS = int(os.getenv("DATA_TTL_HOURS", "26"))
 
 s3 = boto3.client("s3")
 
@@ -22,39 +18,40 @@ def _get_cached():
         return None
 
 
-def _is_stale(doc):
-    try:
-        ts = datetime.fromisoformat(doc.get("updated_at").replace("Z", "+00:00"))
-    except Exception:
-        return True
-    return datetime.now(timezone.utc) - ts > timedelta(hours=MAX_AGE_HOURS)
-
-
-def handler(event, context):
-    qs = event.get("rawQueryString") or ""
-    refresh = "refresh=true" in qs
-
+def handler(event, _context):
     doc = _get_cached()
 
-    if (doc is None) or refresh or _is_stale(doc):
-        client = ECFRClient()
-        sizes = client.compute_agency_sizes_mb()
-        doc = {
-            "updated_at": datetime.now(timezone.utc).isoformat(),
-            "source": "eCFR",
-            "units": "MB (approx, text length based)",
-            "agencies": sizes,
+    if doc is None:
+        return {
+            "statusCode": 503,
+            "headers": {"Content-Type": "application/json"},
+            "body": json.dumps({"error": "Data not available. Ingestion in progress."}),
         }
-        try:
-            s3.put_object(
-                Bucket=S3_BUCKET,
-                Key=CURR_KEY,
-                Body=json.dumps(doc).encode("utf-8"),
-                ContentType="application/json",
-                CacheControl=f"max-age={MAX_AGE_HOURS * 3600}",
+
+    if "agencies" in doc and doc["agencies"]:
+        agencies_mb_only = {agency: data["mb"] for agency, data in doc["agencies"].items()}
+
+        # Get sort parameter from query string (default: size descending)
+        sort_by = "size"
+        if event and "queryStringParameters" in event and event["queryStringParameters"]:
+            sort_by = event["queryStringParameters"].get("sort", "size")
+
+        # Apply sorting based on parameter
+        if sort_by == "name":
+            agencies_sorted = dict(sorted(agencies_mb_only.items(), key=lambda x: x[0]))
+        elif sort_by == "size_asc":
+            agencies_sorted = dict(sorted(agencies_mb_only.items(), key=lambda x: x[1]))
+        else:  # default: "size" (descending)
+            agencies_sorted = dict(
+                sorted(agencies_mb_only.items(), key=lambda x: x[1], reverse=True)
             )
-        except Exception:
-            pass
+
+        doc = {
+            "updated_at": doc["updated_at"],
+            "source": doc["source"],
+            "units": doc["units"],
+            "agencies": agencies_sorted,
+        }
 
     return {
         "statusCode": 200,

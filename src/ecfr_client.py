@@ -10,21 +10,15 @@ logger = logging.getLogger(__name__)
 
 def get_date():
     return "current"
-    # return "1980-07-07"
 
 
 class ECFRClient:
-    """JSON  client for eCFR titles.
-    - Fetches per-title structure JSON (e.g.
-      `/api/versioner/v1/structure/current/title-{title}.json`).
-    - Extracts chapter/agency buckets using API-provided size metadata to estimate data volume.
-    """
+    """JSON client for eCFR titles."""
 
     def __init__(self):
         self.base = os.getenv("ECFR_BASE_URL", "https://www.ecfr.gov")
-        # https://www.ecfr.gov/developers/documentation/api/v1
         self.structure_json_tmpl = os.getenv(
-            "ECFR_STRUCTURE_JSON_PATH_TMPL",
+            "ECFR_TITLE_JSON_PATH_TMPL",
             "/api/versioner/v1/structure/{date}/title-{title}.json",
         )
         self.agencies_path = os.getenv(
@@ -113,9 +107,10 @@ class ECFRClient:
             out[agency] = {
                 "bytes": total_bytes,
                 "mb": round(total_bytes / (1024 * 1024), 3),
-                "titles": sorted(titles_map[agency]),
+                "titles": len(titles_map[agency]),
             }
         return out
+
 
 if __name__ == "__main__":
     client = ECFRClient()
@@ -129,4 +124,4 @@ if __name__ == "__main__":
     )
 
     for name, info in top_agencies[:10]:
-        print(f"{name}: {info['mb']} MB, titles {info['titles']}")
+        print(f"{name}: {info['mb']} MB, {info['titles']} titles")

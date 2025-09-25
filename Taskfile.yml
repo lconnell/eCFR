@@ -22,11 +22,13 @@ tasks:
       - 'uv run ruff check --fix src'
 
   layer:build:
-    desc: Build Lambda layer with requests (in ./layer/python)
+    desc: Build Lambda layer with requests (in ./infra/build/)
     cmds:
       - 'rm -rf layer && mkdir -p layer/python'
       - 'uv pip install --no-cache-dir --target layer/python -r requirements.txt'
-      - 'cd layer && zip -r ../layer.zip python'
+      - 'mkdir -p infra/build'
+      - 'cd layer && zip -r ../infra/build/layer.zip python'
+      - 'rm -rf layer'
 
   tf:init:
     dir: '{{.TF_DIR}}'
@@ -72,4 +74,38 @@ tasks:
     desc: Quick test of API
     dir: '{{.TF_DIR}}'
     cmds:
-      - 'API=$(terraform output -raw api_base_url) && curl -s "$API/agencies" | jq . | head -n 40 || true'
+      - 'API=$(terraform output -raw api_base_url) && curl -s "$API/agencies" | jq ".agencies | to_entries[0:5]"'
+
+  run:
+    desc: Run the script locally
+    cmds:
+      - 'cd src && python ecfr_client.py'
+
+  ingest:
+    desc: Manually trigger the ingestor Lambda to populate data
+    dir: '{{.TF_DIR}}'
+    cmds:
+      - 'aws lambda invoke --function-name $(terraform output -raw ingestor_function_name) response.json'
+      - 'cat response.json && rm response.json'
+
+  logs:
+    desc: Show recent logs from the ingestor Lambda
+    dir: '{{.TF_DIR}}'
+    cmds:
+      - |
+        LOG_GROUP=$(terraform output -raw ingestor_log_group)
+        # Use portable date command (works on both macOS and Linux)
+        START_TIME=$(python3 -c "import time; print(int((time.time() - 3600) * 1000))")
+        echo "Recent logs from $LOG_GROUP:"
+        aws logs filter-log-events --log-group-name "$LOG_GROUP" --start-time "$START_TIME" --query 'events[].message' --output text || echo "No recent logs found"
+
+  debug:
+    desc: Show Lambda environment variables and status
+    dir: '{{.TF_DIR}}'
+    cmds:
+      - |
+        FUNCTION_NAME=$(terraform output -raw ingestor_function_name)
+        echo "=== Environment Variables ==="
+        aws lambda get-function --function-name "$FUNCTION_NAME" --query 'Configuration.Environment.Variables'
+        echo "=== Function Configuration ==="
+        aws lambda get-function --function-name "$FUNCTION_NAME" --query 'Configuration.{MemorySize:MemorySize,Timeout:Timeout,Runtime:Runtime,LastModified:LastModified}'

@@ -25,7 +25,7 @@ def put_json(bucket: str, key: str, payload: dict) -> None:
     )
 
 
-def handler(event, context):
+def handler(_event, _context):
     client = ECFRClient()
     sizes = client.compute_agency_sizes_mb()
     now = datetime.now(timezone.utc).isoformat()

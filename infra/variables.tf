@@ -20,7 +20,7 @@ variable "ecfr_base_url" {
 
 variable "ecfr_title_json_path_tmpl" {
   type    = string
-  default = "/api/versioner/v1/full/{date}/title-{title}.json"
+  default = "/api/versioner/v1/structure/{date}/title-{title}.json"
 }
 
 variable "http_user_agent" {
@@ -28,7 +28,3 @@ variable "http_user_agent" {
   default = "ecfr-agency-size-lambda/1.0"
 }
 
-variable "ecfr_max_titles" {
-  type    = number
-  default = 50
-}
