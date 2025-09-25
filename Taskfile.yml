@@ -1,0 +1,75 @@
+# https://taskfile.dev/
+version: '3'
+
+vars:
+  AWS_REGION: '{{.AWS_REGION | default "us-east-1"}}'
+  TF_DIR: 'infra'
+  VENV: '.venv'
+  PYTHON_VERSION: 'python3.12'
+
+tasks:
+  setup:
+    desc: Create venv with uv, install dev tools (ruff)
+    cmds:
+      - 'uv venv --python {{.PYTHON_VERSION}} {{.VENV}}'
+      - 'uv pip install -r requirements.txt'
+      - 'uv pip install ruff'
+
+  fmt:
+    desc: Format and lint Python with Ruff
+    cmds:
+      - 'uv run ruff format src'
+      - 'uv run ruff check --fix src'
+
+  layer:build:
+    desc: Build Lambda layer with requests (in ./layer/python)
+    cmds:
+      - 'rm -rf layer && mkdir -p layer/python'
+      - 'uv pip install --no-cache-dir --target layer/python -r requirements.txt'
+      - 'cd layer && zip -r ../layer.zip python'
+
+  tf:init:
+    dir: '{{.TF_DIR}}'
+    env:
+      AWS_REGION: '{{.AWS_REGION}}'
+    cmds:
+      - terraform init
+
+  tf:plan:
+    dir: '{{.TF_DIR}}'
+    env:
+      AWS_REGION: '{{.AWS_REGION}}'
+    cmds:
+      - terraform plan -var-file="env.dev.tfvars" -var="region={{.AWS_REGION}}"
+
+  tf:apply:
+    dir: '{{.TF_DIR}}'
+    env:
+      AWS_REGION: '{{.AWS_REGION}}'
+    cmds:
+      - terraform apply -auto-approve -var-file="env.dev.tfvars" -var="region={{.AWS_REGION}}"
+
+  tf:destroy:
+    dir: '{{.TF_DIR}}'
+    env:
+      AWS_REGION: '{{.AWS_REGION}}'
+    cmds:
+      - terraform destroy -auto-approve -var-file="env.dev.tfvars" -var="region={{.AWS_REGION}}"
+
+  deploy:
+    desc: Build layer + package + apply
+    deps: [fmt, layer:build, tf:init]
+    cmds:
+      - task tf:apply
+
+  url:
+    desc: Print API URL
+    dir: '{{.TF_DIR}}'
+    cmds:
+      - terraform output api_base_url
+
+  curl:
+    desc: Quick test of API
+    dir: '{{.TF_DIR}}'
+    cmds:
+      - 'API=$(terraform output -raw api_base_url) && curl -s "$API/agencies" | jq . | head -n 40 || true'
