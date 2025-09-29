@@ -1,8 +1,7 @@
-from __future__ import annotations
-
 import logging
 import os
 import time
+from collections import defaultdict
 
 import requests
 
@@ -11,22 +10,20 @@ logger = logging.getLogger(__name__)
 
 def get_date():
     return "current"
-    # return "1980-07-07"
 
 
 class ECFRClient:
-    """JSON  client for eCFR titles.
-    - Fetches per-title structure JSON (e.g.
-      `/api/versioner/v1/structure/current/title-{title}.json`).
-    - Extracts chapter/agency buckets using API-provided size metadata to estimate data volume.
-    """
+    """JSON client for eCFR titles."""
 
     def __init__(self):
         self.base = os.getenv("ECFR_BASE_URL", "https://www.ecfr.gov")
-        # https://www.ecfr.gov/developers/documentation/api/v1
         self.structure_json_tmpl = os.getenv(
-            "ECFR_STRUCTURE_JSON_PATH_TMPL",
+            "ECFR_TITLE_JSON_PATH_TMPL",
             "/api/versioner/v1/structure/{date}/title-{title}.json",
+        )
+        self.agencies_path = os.getenv(
+            "ECFR_AGENCIES_PATH",
+            "/api/admin/v1/agencies",
         )
         self.user_agent = os.getenv("HTTP_USER_AGENT", "ecfr-agency-size-lambda/1.0")
         self.default_date = os.getenv("ECFR_DATE") or get_date()
@@ -44,70 +41,76 @@ class ECFRClient:
         path = self.structure_json_tmpl.format(date=date, title=title)
         return f"{self.base}{path}"
 
-    def _available_titles(self):
-        url = f"{self.base}/api/versioner/v1/titles.json"
+    def _agencies_url(self):
+        return f"{self.base}{self.agencies_path}.json"
+
+    def _iter_agencies(self):
+        url = self._agencies_url()
         data = self._get(url)
-        titles = []
-        for info in data.get("titles", []):
-            if info.get("reserved"):
-                continue
-            try:
-                titles.append(int(info["number"]))
-            except Exception:
-                continue
-        return sorted(titles)
+        for agency in data.get("agencies", []):
+            yield agency
 
-    def inspect_title_structure(self, title, date=None):
-        """Return the raw top-level chapter/subtitle nodes for manual inspection."""
-
-        date = date or self.default_date
+    def _fetch_title_structure(self, title, date):
         url = self._structure_url(title, date)
-        data = self._get(url)
-        return data.get("children", [])
+        return self._get(url)
+
+    def _find_chapter_size(self, structure, chapter_identifier):
+        stack = [structure]
+        chapter_identifier = (chapter_identifier or "").strip()
+        while stack:
+            node = stack.pop()
+            if node.get("identifier", "").strip() == chapter_identifier:
+                return node.get("size")
+            for child in node.get("children") or []:
+                stack.append(child)
+        return None
 
     def compute_agency_sizes_mb(self, date=None):
         date = date or self.default_date
-        acc = {}
-        titles_map = {}
+        sizes = defaultdict(int)
+        titles_map = defaultdict(set)
+        structure_cache = {}
 
-        titles = self._available_titles()
-
-        for t in titles:
-            url = self._structure_url(t, date)
-            try:
-                data = self._get(url)
-            except Exception as exc:  # pragma: no cover - network dependent
-                logger.warning("Skipping title %s for %s: %s", t, date, exc)
+        for agency in self._iter_agencies():
+            name = agency.get("name")
+            if not name:
                 continue
 
-            # Find chapter-like nodes; if not obvious, treat entire title as one bucket
-            chapters = data.get("children", [])
+            for ref in agency.get("cfr_references", []):
+                title = ref.get("title")
+                chapter = ref.get("chapter")
+                if title is None or chapter is None:
+                    continue
 
-            for ch in chapters:
-                # Top-level nodes carry the agency in `label`/`label_description`; their `size`
-                # accounts for all nested children under that chapter already, so we can treat it as
-                # the total byte count for the agency slice of this title.
-                label = ch.get("label") or ch.get("label_description")
-                if isinstance(label, str) and label.strip():
-                    agency = label.strip()
-                else:
-                    agency = f"Title {t} (Unattributed)"
+                if title not in structure_cache:
+                    try:
+                        structure_cache[title] = self._fetch_title_structure(title, date)
+                    except Exception as exc:  # pragma: no cover - network dependent
+                        logger.warning("Skipping title %s for %s: %s", title, date, exc)
+                        structure_cache[title] = None
+                        continue
+                    time.sleep(self.sleep_s)
 
-                size = ch["size"]
-                acc[agency] = acc.get(agency, 0) + int(size)
-                titles_map.setdefault(agency, set()).add(t)
+                structure = structure_cache.get(title)
+                if not structure:
+                    continue
 
-            time.sleep(self.sleep_s)
+                chapter_size = self._find_chapter_size(structure, chapter)
+                if chapter_size is None:
+                    continue
 
-        # Convert to output shape
+                sizes[name] += int(chapter_size)
+                titles_map[name].add(int(title))
+
         out = {}
-        for agency, b in acc.items():
+        for agency, total_bytes in sizes.items():
             out[agency] = {
-                "bytes": int(b),
-                "mb": round(b / (1024 * 1024), 3),
-                "titles": sorted(list(titles_map.get(agency, set()))),
+                "bytes": total_bytes,
+                "mb": round(total_bytes / (1024 * 1024), 3),
+                "titles": len(titles_map[agency]),
             }
         return out
+
 
 if __name__ == "__main__":
     client = ECFRClient()
@@ -121,4 +124,4 @@ if __name__ == "__main__":
     )
 
     for name, info in top_agencies[:10]:
-        print(f"{name}: {info['mb']} MB, titles {info['titles']}")
+        print(f"{name}: {info['mb']} MB, {info['titles']} titles")

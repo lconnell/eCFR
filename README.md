@@ -1,109 +1,182 @@
-# eCFR Agency Regulation Size API (Serverless)
+# eCFR Agency Regulation Size Analyzer
 
-A simple serverless API that reports, for each federal agency, an approximate **size (MB)** of its
-regulations found in the eCFR. It updates within **24 hours** using a daily precompute job.
+A Python package that analyzes the [eCFR](https://www.ecfr.gov/) to calculate the size of regulations for each federal agency using official eCFR API endpoints.
 
-## Architecture (why a scheduler *and* an API)
+## Features
 
-- **Ingestor Lambda** (scheduled daily by **EventBridge**) pulls the latest eCFR JSON endpoints,
-  computes per‑agency text size, and writes two S3 objects:
-  - Current snapshot: `ecfr/agency_sizes.json`
-  - Dated archive: `ecfr/archives/agency_sizes_YYYY-MM-DD.json` (S3 Lifecycle deletes archives after 15 days)
-- **API Lambda** behind **API Gateway HTTP API** serves `/agencies` quickly from S3. It can optionally
-  recompute inline when the cache is missing or stale (best‑effort).
+- Fetches regulation data directly from the official eCFR API
+- Calculates the size of regulations in MB for each agency
+- Uses the official eCFR agency list for accurate attribution
+- Handles pagination and rate limiting
+- Caches API responses for efficient processing
 
-This meets the “reflect changes within 24 hours” requirement without modifying source code and avoids
-slow/costly live crawls on every request.
+## Installation
 
-## JSON endpoints (configurable)
+1. Clone this repository
+2. Install [Task](https://taskfile.dev/installation/)
+3. Run the setup:
+   ```bash
+   task setup
+   ```
+   This will:
+   - Create a Python virtual environment
+   - Install development tools (ruff)
+   - Install all dependencies
 
-This project prefers **JSON** over XML. You can configure the URL template via Terraform variables
-(see **Updating endpoints** below) without any code changes:
+## Usage
 
-- `ecfr_base_url` (default: `https://www.ecfr.gov`)
-- `ecfr_title_json_path_tmpl` (default: `/api/versioner/v1/full/{date}/title-{title}.json`)
+```python
+from ecfr_client import ECFRClient
 
-The client will iterate titles `1..50` by default (configurable via env `ECFR_MAX_TITLES`). For each
-title, it attempts to attribute chapter sections to an agency using common JSON fields, and falls back
-to reasonable labels if needed. Size is computed as text byte counts (approximate MB).
+# Create a client
+client = ECFRClient()
 
-## Prereqs
+# Get agency sizes in MB
+agency_sizes = client.compute_agency_sizes_mb()
 
-- **Terraform 1.13.3+**
-- AWS credentials with permissions for Lambda, API Gateway, EventBridge, S3, IAM
-- **go-task** (https://github.com/go-task/task)
-- **uv** (https://github.com/astral-sh/uv) for Python env/package mgmt
-- Python 3.12 on your dev machine (for formatting/lint only)
+# Print top 10 agencies by size
+for agency, info in sorted(agency_sizes.items(), 
+                         key=lambda x: x[1]['mb'], 
+                         reverse=True)[:10]:
+    print(f"{agency}: {info['mb']:.2f} MB (titles: {info['titles']})")
+```
 
-## Common tasks
+## Common Tasks
 
 ```bash
-# 1) Setup local tooling
-task setup
-
-# 2) Lint/format
+# Format and lint code
 task fmt
 
-# 3) Build Lambda layer (requests)  -> layer.zip
+# Run the code locally
+task run
+
+# Build Lambda layer (includes requests)
 task layer:build
 
-# 4) Plan/apply infra (uses infra/env.dev.tfvars)
-task tf:plan
-task tf:apply
+# Deploy infrastructure
+task deploy     # Complete deployment (format, build layer, terraform apply)
 
-# Or do it all:
-task deploy
+# Individual deployment steps
+task layer:build  # Build Lambda layer (required before tf:plan)
+task tf:init     # Initialize Terraform
+task tf:plan     # Show planned changes
+task tf:apply    # Apply changes
 
-# 5) Get API URL and test
-task url
-task curl
+# Test the deployed API
+task url         # Get the API endpoint URL
+task curl        # Test the /agencies endpoint
+
+# Troubleshooting
+task ingest      # Manually trigger data ingestion
+task logs        # View recent Lambda logs
+task debug       # Show Lambda configuration
 ```
 
-## Updating endpoints / date
+## How It Works
 
-All endpoint settings are **variables** or **env vars**:
+The package works by:
+1. Fetching the official list of agencies from the eCFR API
+2. For each agency, retrieving its associated CFR title and chapter references
+3. Fetching the structure for each title to get the size of each chapter
+4. Aggregating the sizes by agency
 
-- **Terraform variables** (no code change, no rebuild):
-  - `ecfr_base_url`
-  - `ecfr_title_json_path_tmpl`
-  - `http_user_agent`
+## Output Format
 
-Edit `infra/env.dev.tfvars` then:
+The `compute_agency_sizes_mb()` method returns a dictionary where:
+- Keys are agency names (e.g., "Environmental Protection Agency")
+- Values are dictionaries containing:
+  - `bytes`: Total size in bytes
+  - `mb`: Size in megabytes (rounded to 3 decimal places)
+  - `titles`: Number of CFR titles associated with the agency
 
-```bash
-task tf:apply
-```
+## Example Output
 
-- **Lambda env vars** (set by Terraform):
-  - `ECFR_MAX_TITLES` (default 50)
-  - `ECFR_DATE` (optional override; defaults to `today` in UTC)
-
-## API
-
-- **GET** `/agencies`
-  - Returns latest snapshot JSON.
-  - Optional `?refresh=true` will attempt an inline recompute (best‑effort).
-
-Example:
 ```json
 {
-  "updated_at": "2025-09-24T14:11:22.123456+00:00",
-  "source": "eCFR",
-  "units": "MB (approx, text length based)",
-  "agencies": {
-    "Department of Transportation": { "bytes": 12345678, "mb": 11.773, "titles": [14, 23, 49] },
-    "Environmental Protection Agency": { "bytes": 23456789, "mb": 22.383, "titles": [40] }
+  "Environmental Protection Agency": {
+    "bytes": 152039000,
+    "mb": 152.039,
+    "titles": 5
+  },
+  "Department of Transportation": {
+    "bytes": 12345678,
+    "mb": 11.773,
+    "titles": 3
   }
 }
 ```
 
-## Notes / Caveats
+## Configuration
 
-- **Heuristic attribution**: If an explicit agency field isn’t present, chapters are grouped by their
-  header/label. For better fidelity you can add a mapping table later.
-- **Lifecycle**: S3 automatically deletes `ecfr/archives/*` objects older than **15 days**.
-- **Dependencies**: Runtime third‑party deps are shipped in a **custom Lambda layer** (`requests`).
-- **Cost/rate‑limits**: Ingestor rate‑limits itself; parallelism can be added if needed.
+Environment variables:
+- `ECFR_BASE_URL`: Base URL for eCFR API (default: `https://www.ecfr.gov`)
+- `ECFR_POLITE_DELAY_SECONDS`: Delay between API requests in seconds (default: `0.15`)
+- `ECFR_DATE`: Date of regulations to analyze (default: `current`)
 
-## License
-MIT
+## API Endpoints Used
+
+- Agency list: `/api/admin/v1/agencies.json`
+- Title structure: `/api/versioner/v1/structure/{date}/title-{title}.json`
+
+## Notes
+
+- The size is calculated based on the raw text length of the regulations
+- The agency list and title references come directly from the official eCFR API
+- Each agency's regulations may span multiple CFR titles
+- The implementation includes request caching and rate limiting to be a good API citizen
+
+## Deployed API Usage
+
+After deployment, the API provides a single endpoint:
+
+### GET /agencies
+
+Returns JSON with federal agency regulation sizes, sorted by regulation size (largest first) by default.
+
+**Example:**
+```bash
+# Get the API URL
+task url
+
+# Test the endpoint
+curl "$(task url)/agencies" | jq .
+
+# Or use the task shortcut
+task curl
+```
+
+**Response format:**
+```json
+{
+  "updated_at": "2025-09-25T10:30:00Z",
+  "source": "eCFR",
+  "units": "MB (approx, text length based)",
+  "agencies": {
+    "Environmental Protection Agency": 152.039,
+    "Federal Communications Commission": 19.36,
+    "Department of Energy": 12.19
+  }
+}
+```
+
+**Query parameters:**
+- `?sort=size` (default) - Sort by regulation size, largest first
+- `?sort=name` - Sort alphabetically by agency name
+- `?sort=size_asc` - Sort by regulation size, smallest first
+
+**Examples:**
+```bash
+# Default: largest agencies first
+curl "$(task url)/agencies"
+
+# Alphabetical sorting
+curl "$(task url)/agencies?sort=name"
+
+# Smallest agencies first
+curl "$(task url)/agencies?sort=size_asc"
+```
+
+**Terraform outputs:**
+- `api_base_url` - The base URL for the API Gateway
+- `s3_bucket` - S3 bucket name for data storage
+- `s3_data_url` - S3 location of the current data snapshot
