@@ -251,21 +251,6 @@ def serve_static(filename):
     return static_file(filename, root=Path(__file__).parent / "static")
 
 
-def find_available_port(start_port=8080, max_attempts=10):
-    # """Find an available port starting from start_port."""
-    # import socket  # Imported here to avoid unused import at module level
-
-    # for port in range(start_port, start_port + max_attempts):
-    #     try:
-    #         with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
-    #             s.bind(("localhost", port))
-    #             return port
-    #     except OSError:
-    #         continue
-    # return start_port
-    return 8080
-
-
 if __name__ == "__main__":
     port = 8080
     print(f"Starting eCFR Agency Size Tracker on port {port}...")
