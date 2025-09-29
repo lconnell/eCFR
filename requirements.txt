@@ -1,2 +1,0 @@
-# Runtime deps packaged into the Lambda layer, kept here for tooling parity
-requests>=2.32.5

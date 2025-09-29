@@ -1,0 +1,11 @@
+The results of this assignment is a bit more than what was requested but I wanted to demonstrate that I understand design, infrastructure, 
+code quality, documentation and how I am a forward thinker and thrive on following best practices and streamlining workflows.
+I hope this approach did not bite me in the tail!
+
+It took me about 7 hours to complete this assignment.
+
+I chose to deploy this application using API Gateway and Lambda function in AWS and use S3 for storage. I also chose to use Terraform for infrastructure as code. You can find a working deployment at https://k6ocunpn02.execute-api.us-east-1.amazonaws.com/agencies.
+
+Thank you for your consideration.
+
+- Lee

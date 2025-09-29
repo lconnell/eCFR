@@ -56,8 +56,8 @@ htmlcov/
 Thumbs.db
 
 # Exclude all markdown files except README.md
-*.md
-!README.md
+# *.md
+# !README.md
 
 # Terraform state
 infra/.terraform

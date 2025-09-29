@@ -1,0 +1,757 @@
+{
+  "updated_at": "2025-09-29T00:57:50.784131+00:00",
+  "source": "eCFR",
+  "units": "MB (approx, text length based)",
+  "agencies": {
+    "Administrative Conference of the United States": {
+      "bytes": 84635,
+      "mb": 0.081,
+      "titles": 1
+    },
+    "Advisory Council on Historic Preservation": {
+      "bytes": 220755,
+      "mb": 0.211,
+      "titles": 1
+    },
+    "Special Inspector General for Afghanistan Reconstruction": {
+      "bytes": 74527,
+      "mb": 0.071,
+      "titles": 1
+    },
+    "African Development Foundation": {
+      "bytes": 272397,
+      "mb": 0.26,
+      "titles": 2
+    },
+    "United States Agency for Global Media": {
+      "bytes": 486093,
+      "mb": 0.464,
+      "titles": 2
+    },
+    "Department of Agriculture": {
+      "bytes": 283927,
+      "mb": 0.271,
+      "titles": 4
+    },
+    "Air Transportation System Stabilization": {
+      "bytes": 47500,
+      "mb": 0.045,
+      "titles": 1
+    },
+    "American Battle Monuments Commission": {
+      "bytes": 91155,
+      "mb": 0.087,
+      "titles": 1
+    },
+    "Appalachian Regional Commission": {
+      "bytes": 658,
+      "mb": 0.001,
+      "titles": 1
+    },
+    "Architectural and Transportation Barriers Compliance Board": {
+      "bytes": 1139327,
+      "mb": 1.087,
+      "titles": 1
+    },
+    "Arctic Research Commission": {
+      "bytes": 28692,
+      "mb": 0.027,
+      "titles": 1
+    },
+    "Armed Forces Retirement Home": {
+      "bytes": 50329,
+      "mb": 0.048,
+      "titles": 2
+    },
+    "Committee for Purchase From People Who Are Blind or Severely Disabled": {
+      "bytes": 259314,
+      "mb": 0.247,
+      "titles": 1
+    },
+    "Central Intelligence Agency": {
+      "bytes": 230960,
+      "mb": 0.22,
+      "titles": 1
+    },
+    "Chemical Safety and Hazard Investigation Board": {
+      "bytes": 172496,
+      "mb": 0.165,
+      "titles": 1
+    },
+    "Commission on Civil Rights": {
+      "bytes": 179741,
+      "mb": 0.171,
+      "titles": 2
+    },
+    "Department of Commerce": {
+      "bytes": 514700,
+      "mb": 0.491,
+      "titles": 3
+    },
+    "Commodity Futures Trading Commission": {
+      "bytes": 11007,
+      "mb": 0.01,
+      "titles": 2
+    },
+    "Construction Industry Collective Bargaining Commission": {
+      "bytes": 6749,
+      "mb": 0.006,
+      "titles": 1
+    },
+    "Consumer Financial Protection Bureau": {
+      "bytes": 8295621,
+      "mb": 7.911,
+      "titles": 2
+    },
+    "Consumer Product Safety Commission": {
+      "bytes": 3796801,
+      "mb": 3.621,
+      "titles": 2
+    },
+    "Council of the Inspectors General on Integrity and Efficiency": {
+      "bytes": 99125,
+      "mb": 0.095,
+      "titles": 1
+    },
+    "Court Services and Offender Supervision Agency for the District of Columbia": {
+      "bytes": 217167,
+      "mb": 0.207,
+      "titles": 2
+    },
+    "Defense Nuclear Facilities Safety Board": {
+      "bytes": 178387,
+      "mb": 0.17,
+      "titles": 1
+    },
+    "Department of Defense": {
+      "bytes": 681376,
+      "mb": 0.65,
+      "titles": 3
+    },
+    "Delaware River Basin Commission": {
+      "bytes": 240595,
+      "mb": 0.229,
+      "titles": 1
+    },
+    "Denali Commission": {
+      "bytes": 43415,
+      "mb": 0.041,
+      "titles": 1
+    },
+    "Office of Director of National Intelligence": {
+      "bytes": 152627,
+      "mb": 0.146,
+      "titles": 2
+    },
+    "National Council on Disability": {
+      "bytes": 94937,
+      "mb": 0.091,
+      "titles": 2
+    },
+    "East-West Foreign Trade Board": {
+      "bytes": 1297,
+      "mb": 0.001,
+      "titles": 1
+    },
+    "Department of Education": {
+      "bytes": 53925,
+      "mb": 0.051,
+      "titles": 2
+    },
+    "Election Assistance Commission": {
+      "bytes": 153709,
+      "mb": 0.147,
+      "titles": 2
+    },
+    "Emergency Oil and Gas Guaranteed Loan Board": {
+      "bytes": 95502,
+      "mb": 0.091,
+      "titles": 1
+    },
+    "Emergency Steel Guarantee Loan Board": {
+      "bytes": 94483,
+      "mb": 0.09,
+      "titles": 1
+    },
+    "National Commission for Employment Policy": {
+      "bytes": 132607,
+      "mb": 0.126,
+      "titles": 1
+    },
+    "Department of Energy": {
+      "bytes": 12804529,
+      "mb": 12.211,
+      "titles": 5
+    },
+    "Joint Board for the Enrollment of Actuaries": {
+      "bytes": 149149,
+      "mb": 0.142,
+      "titles": 1
+    },
+    "Environmental Protection Agency": {
+      "bytes": 159444488,
+      "mb": 152.058,
+      "titles": 5
+    },
+    "Equal Employment Opportunity Commission": {
+      "bytes": 1887483,
+      "mb": 1.8,
+      "titles": 2
+    },
+    "Executive Office of the President": {
+      "bytes": 33536,
+      "mb": 0.032,
+      "titles": 1
+    },
+    "Export-Import Bank of the United States": {
+      "bytes": 265508,
+      "mb": 0.253,
+      "titles": 3
+    },
+    "Farm Credit Administration": {
+      "bytes": 1954867,
+      "mb": 1.864,
+      "titles": 2
+    },
+    "Farm Credit System Insurance Corporation": {
+      "bytes": 165228,
+      "mb": 0.158,
+      "titles": 2
+    },
+    "Federal Acquisition Regulatory Council": {
+      "bytes": 7863675,
+      "mb": 7.499,
+      "titles": 1
+    },
+    "Federal Acquisition Security Council": {
+      "bytes": 41863,
+      "mb": 0.04,
+      "titles": 1
+    },
+    "Federal Communications Commission": {
+      "bytes": 20300932,
+      "mb": 19.36,
+      "titles": 3
+    },
+    "Federal Deposit Insurance Corporation": {
+      "bytes": 5721362,
+      "mb": 5.456,
+      "titles": 2
+    },
+    "Federal Election Commission": {
+      "bytes": 1570851,
+      "mb": 1.498,
+      "titles": 2
+    },
+    "Federal Financial Institutions Examination Council": {
+      "bytes": 165115,
+      "mb": 0.157,
+      "titles": 1
+    },
+    "Federal Financing Bank": {
+      "bytes": 0,
+      "mb": 0.0,
+      "titles": 1
+    },
+    "Federal Housing Finance Agency": {
+      "bytes": 2571164,
+      "mb": 2.452,
+      "titles": 2
+    },
+    "Federal Labor Relations Authority": {
+      "bytes": 239371,
+      "mb": 0.228,
+      "titles": 2
+    },
+    "Federal Maritime Commission": {
+      "bytes": 1284577,
+      "mb": 1.225,
+      "titles": 1
+    },
+    "Federal Mediation and Conciliation Service": {
+      "bytes": 526522,
+      "mb": 0.502,
+      "titles": 2
+    },
+    "Federal Mine Safety and Health Review Commission": {
+      "bytes": 234712,
+      "mb": 0.224,
+      "titles": 2
+    },
+    "Federal Permitting Improvement Steering Council": {
+      "bytes": 1236,
+      "mb": 0.001,
+      "titles": 1
+    },
+    "Administrative Committee of the Federal Register": {
+      "bytes": 106657,
+      "mb": 0.102,
+      "titles": 1
+    },
+    "Federal Reserve System": {
+      "bytes": 11904945,
+      "mb": 11.353,
+      "titles": 1
+    },
+    "Federal Retirement Thrift Investment Board": {
+      "bytes": 571310,
+      "mb": 0.545,
+      "titles": 1
+    },
+    "Federal Trade Commission": {
+      "bytes": 3118909,
+      "mb": 2.974,
+      "titles": 2
+    },
+    "Financial Stability Oversight Council": {
+      "bytes": 155276,
+      "mb": 0.148,
+      "titles": 1
+    },
+    "Commission of Fine Arts": {
+      "bytes": 169087,
+      "mb": 0.161,
+      "titles": 1
+    },
+    "First Responder Network Authority": {
+      "bytes": 10825,
+      "mb": 0.01,
+      "titles": 1
+    },
+    "Foreign Service Grievance Board": {
+      "bytes": 56935,
+      "mb": 0.054,
+      "titles": 1
+    },
+    "Foreign Service Impasse Disputes Panel": {
+      "bytes": 457660,
+      "mb": 0.436,
+      "titles": 1
+    },
+    "Foreign Service Labor Relations Board": {
+      "bytes": 457660,
+      "mb": 0.436,
+      "titles": 1
+    },
+    "General Services Administration": {
+      "bytes": 1830258,
+      "mb": 1.745,
+      "titles": 3
+    },
+    "Government Accountability Office": {
+      "bytes": 426049,
+      "mb": 0.406,
+      "titles": 1
+    },
+    "Office of Government Ethics": {
+      "bytes": 1201780,
+      "mb": 1.146,
+      "titles": 1
+    },
+    "Gulf Coast Ecosystem Restoration Council": {
+      "bytes": 89002,
+      "mb": 0.085,
+      "titles": 2
+    },
+    "Harry S. Truman Scholarship Foundation": {
+      "bytes": 74600,
+      "mb": 0.071,
+      "titles": 1
+    },
+    "Department of Health and Human Services": {
+      "bytes": 479763,
+      "mb": 0.458,
+      "titles": 3
+    },
+    "Department of Homeland Security": {
+      "bytes": 4010006,
+      "mb": 3.824,
+      "titles": 3
+    },
+    "Department of Housing and Urban Development": {
+      "bytes": 357587,
+      "mb": 0.341,
+      "titles": 3
+    },
+    "Office of Independent Counsel": {
+      "bytes": 91901,
+      "mb": 0.088,
+      "titles": 1
+    },
+    "United States Institute of Peace": {
+      "bytes": 28939,
+      "mb": 0.028,
+      "titles": 1
+    },
+    "Inter-American Foundation": {
+      "bytes": 223810,
+      "mb": 0.213,
+      "titles": 2
+    },
+    "Department of Interior": {
+      "bytes": 457523,
+      "mb": 0.436,
+      "titles": 4
+    },
+    "United States Section United States and Mexico International Boundary and Water Commission": {
+      "bytes": 158467,
+      "mb": 0.151,
+      "titles": 1
+    },
+    "United States International Development Cooperation Agency": {
+      "bytes": 73848,
+      "mb": 0.07,
+      "titles": 1
+    },
+    "United States International Development Finance Corporation": {
+      "bytes": 186759,
+      "mb": 0.178,
+      "titles": 3
+    },
+    "Agency for International Development": {
+      "bytes": 2126459,
+      "mb": 2.028,
+      "titles": 3
+    },
+    "United States and Canada International Joint Commission": {
+      "bytes": 34073,
+      "mb": 0.032,
+      "titles": 1
+    },
+    "International Organizations Employees Loyalty Board": {
+      "bytes": 15785,
+      "mb": 0.015,
+      "titles": 1
+    },
+    "United States International Trade Commission": {
+      "bytes": 961676,
+      "mb": 0.917,
+      "titles": 1
+    },
+    "Interstate Commerce Commission": {
+      "bytes": 6733,
+      "mb": 0.006,
+      "titles": 1
+    },
+    "James Madison Memorial Fellowship Foundation": {
+      "bytes": 77311,
+      "mb": 0.074,
+      "titles": 1
+    },
+    "Japan-United States Friendship Commission": {
+      "bytes": 28442,
+      "mb": 0.027,
+      "titles": 1
+    },
+    "Department of Justice": {
+      "bytes": 386851,
+      "mb": 0.369,
+      "titles": 7
+    },
+    "Department of Labor": {
+      "bytes": 299642,
+      "mb": 0.286,
+      "titles": 4
+    },
+    "Legal Services Corporation": {
+      "bytes": 503042,
+      "mb": 0.48,
+      "titles": 1
+    },
+    "National Commission on Libraries and Information Science": {
+      "bytes": 75715,
+      "mb": 0.072,
+      "titles": 1
+    },
+    "Library of Congress": {
+      "bytes": 90605,
+      "mb": 0.086,
+      "titles": 1
+    },
+    "Office of Management and Budget": {
+      "bytes": 1262055,
+      "mb": 1.204,
+      "titles": 2
+    },
+    "Marine Mammal Commission": {
+      "bytes": 93708,
+      "mb": 0.089,
+      "titles": 1
+    },
+    "Merit Systems Protection Board": {
+      "bytes": 496281,
+      "mb": 0.473,
+      "titles": 1
+    },
+    "Office for Micronesian Status Negotiations": {
+      "bytes": 27713,
+      "mb": 0.026,
+      "titles": 1
+    },
+    "Military Compensation and Retirement Modernization Commission": {
+      "bytes": 24559,
+      "mb": 0.023,
+      "titles": 1
+    },
+    "National Commission on Military, National, and Public Service": {
+      "bytes": 132607,
+      "mb": 0.126,
+      "titles": 1
+    },
+    "Millennium Challenge Corporation": {
+      "bytes": 96504,
+      "mb": 0.092,
+      "titles": 1
+    },
+    "Morris K. Udall and Stewart L. Udall Foundation": {
+      "bytes": 57575,
+      "mb": 0.055,
+      "titles": 1
+    },
+    "National Aeronautics and Space Administration": {
+      "bytes": 2196595,
+      "mb": 2.095,
+      "titles": 4
+    },
+    "Corporation for National and Community Service": {
+      "bytes": 1402720,
+      "mb": 1.338,
+      "titles": 2
+    },
+    "National Archives and Records Administration": {
+      "bytes": 1196713,
+      "mb": 1.141,
+      "titles": 3
+    },
+    "National Capital Planning Commission": {
+      "bytes": 295115,
+      "mb": 0.281,
+      "titles": 1
+    },
+    "National Counterintelligence Center": {
+      "bytes": 156393,
+      "mb": 0.149,
+      "titles": 1
+    },
+    "National Credit Union Administration": {
+      "bytes": 2910725,
+      "mb": 2.776,
+      "titles": 2
+    },
+    "National Crime Prevention and Privacy Compact Council": {
+      "bytes": 40361,
+      "mb": 0.038,
+      "titles": 1
+    },
+    "Office of National Drug Control Policy": {
+      "bytes": 65192,
+      "mb": 0.062,
+      "titles": 2
+    },
+    "National Foundation on the Arts and the Humanities": {
+      "bytes": 922210,
+      "mb": 0.879,
+      "titles": 1
+    },
+    "National Labor Relations Board": {
+      "bytes": 284390,
+      "mb": 0.271,
+      "titles": 2
+    },
+    "National Mediation Board": {
+      "bytes": 38082,
+      "mb": 0.036,
+      "titles": 2
+    },
+    "National Railroad Adjustment Board": {
+      "bytes": 9284,
+      "mb": 0.009,
+      "titles": 1
+    },
+    "National Railroad Passenger Corporation": {
+      "bytes": 63138,
+      "mb": 0.06,
+      "titles": 1
+    },
+    "National Science Foundation": {
+      "bytes": 945918,
+      "mb": 0.902,
+      "titles": 4
+    },
+    "National Transportation Safety Board": {
+      "bytes": 415540,
+      "mb": 0.396,
+      "titles": 1
+    },
+    "Office of Navajo and Hopi Indian Relocation": {
+      "bytes": 380331,
+      "mb": 0.363,
+      "titles": 1
+    },
+    "Neighborhood Reinvestment Corporation": {
+      "bytes": 27752,
+      "mb": 0.026,
+      "titles": 1
+    },
+    "Northeast Interstate Low-Level Radioactive Waste Commission": {
+      "bytes": 11805,
+      "mb": 0.011,
+      "titles": 1
+    },
+    "Nuclear Regulatory Commission": {
+      "bytes": 231626,
+      "mb": 0.221,
+      "titles": 4
+    },
+    "Nuclear Waste Technical Review Board": {
+      "bytes": 65310,
+      "mb": 0.062,
+      "titles": 1
+    },
+    "Occupational Safety and Health Review Commission": {
+      "bytes": 315127,
+      "mb": 0.301,
+      "titles": 1
+    },
+    "Oklahoma City National Memorial Trust": {
+      "bytes": 4707,
+      "mb": 0.004,
+      "titles": 1
+    },
+    "Peace Corps": {
+      "bytes": 306334,
+      "mb": 0.292,
+      "titles": 2
+    },
+    "Pennsylvania Avenue Development Corporation": {
+      "bytes": 278094,
+      "mb": 0.265,
+      "titles": 1
+    },
+    "Pension Benefit Guaranty Corporation": {
+      "bytes": 1843432,
+      "mb": 1.758,
+      "titles": 1
+    },
+    "Office of Personnel Management": {
+      "bytes": 537429,
+      "mb": 0.513,
+      "titles": 3
+    },
+    "Postal Regulatory Commission": {
+      "bytes": 896043,
+      "mb": 0.855,
+      "titles": 2
+    },
+    "United States Postal Service": {
+      "bytes": 33614,
+      "mb": 0.032,
+      "titles": 2
+    },
+    "Presidio Trust": {
+      "bytes": 327065,
+      "mb": 0.312,
+      "titles": 1
+    },
+    "Privacy and Civil Liberties Oversight Board": {
+      "bytes": 74865,
+      "mb": 0.071,
+      "titles": 1
+    },
+    "Railroad Retirement Board": {
+      "bytes": 2457137,
+      "mb": 2.343,
+      "titles": 1
+    },
+    "Securities and Exchange Commission": {
+      "bytes": 11012248,
+      "mb": 10.502,
+      "titles": 2
+    },
+    "Selective Service System": {
+      "bytes": 393578,
+      "mb": 0.375,
+      "titles": 1
+    },
+    "Small Business Administration": {
+      "bytes": 3731238,
+      "mb": 3.558,
+      "titles": 2
+    },
+    "Smithsonian Institution": {
+      "bytes": 23967,
+      "mb": 0.023,
+      "titles": 1
+    },
+    "Social Security Administration": {
+      "bytes": 6500277,
+      "mb": 6.199,
+      "titles": 3
+    },
+    "Office of Special Counsel": {
+      "bytes": 114581,
+      "mb": 0.109,
+      "titles": 1
+    },
+    "Department of State": {
+      "bytes": 537664,
+      "mb": 0.513,
+      "titles": 4
+    },
+    "Surface Transportation Board": {
+      "bytes": 1935037,
+      "mb": 1.845,
+      "titles": 1
+    },
+    "Susquehanna River Basin Commission": {
+      "bytes": 192429,
+      "mb": 0.184,
+      "titles": 1
+    },
+    "Tennessee Valley Authority": {
+      "bytes": 768615,
+      "mb": 0.733,
+      "titles": 2
+    },
+    "Department of Transportation": {
+      "bytes": 491385,
+      "mb": 0.469,
+      "titles": 4
+    },
+    "Department of Treasury": {
+      "bytes": 550505,
+      "mb": 0.525,
+      "titles": 6
+    },
+    "Office of United States Trade Representative": {
+      "bytes": 239676,
+      "mb": 0.229,
+      "titles": 1
+    },
+    "Utah Reclamation Mitigation and Conservation Commission": {
+      "bytes": 170049,
+      "mb": 0.162,
+      "titles": 1
+    },
+    "Department of Veterans Affairs": {
+      "bytes": 10506171,
+      "mb": 10.019,
+      "titles": 3
+    },
+    "Office of Vice President of the United States": {
+      "bytes": 23528,
+      "mb": 0.022,
+      "titles": 1
+    },
+    "Water Resources Council": {
+      "bytes": 215162,
+      "mb": 0.205,
+      "titles": 1
+    },
+    "President's Commission on White House Fellowships": {
+      "bytes": 132607,
+      "mb": 0.126,
+      "titles": 1
+    }
+  }
+}

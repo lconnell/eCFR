@@ -12,8 +12,7 @@ tasks:
     desc: Create venv with uv, install dev tools (ruff)
     cmds:
       - 'uv venv --python {{.PYTHON_VERSION}} {{.VENV}}'
-      - 'uv pip install -r requirements.txt'
-      - 'uv pip install ruff'
+      - 'uv pip install --editable .[dev]'
 
   fmt:
     desc: Format and lint Python with Ruff
@@ -22,10 +21,12 @@ tasks:
       - 'uv run ruff check --fix src'
 
   layer:build:
-    desc: Build Lambda layer with requests (in ./infra/build/)
+    desc: Build Lambda layer with dependencies (in ./infra/build/)
     cmds:
       - 'rm -rf layer && mkdir -p layer/python'
-      - 'uv pip install --no-cache-dir --target layer/python -r requirements.txt'
+      - 'uv pip install --no-cache-dir --target layer/python .'
+      - 'find layer/python -name "__pycache__" -type d -exec rm -rf {} +'
+      - 'find layer/python -name "*.dist-info" -type d -exec rm -rf {} +'
       - 'mkdir -p infra/build'
       - 'cd layer && zip -r ../infra/build/layer.zip python'
       - 'rm -rf layer'

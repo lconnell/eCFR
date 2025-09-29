@@ -1,7 +1,28 @@
 [project]
 name = "ecfr"
 version = "0.1.0"
+description = "eCFR Agency Size Tracker"
+readme = "README.md"
 requires-python = ">=3.12"
+license = {text = "MIT"}
+authors = [
+    {name = "Lee Connell", email = "lee.a.connell@gmail.com"},
+]
+dependencies = [
+    "bottle>=0.13.4",
+    "requests>=2.32.5",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.1.0",
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+]
+
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [tool.ruff]
 line-length = 100
